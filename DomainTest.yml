@@ -6,10 +6,6 @@
   gather_facts: no
   become: yes
   become_method: sudo
-  vars_prompt:
-    - name: "bind_password"
-      prompt: "Password for adbrowsersvc"
-      private: yes
 
   tasks:
     - name: Install the required packages

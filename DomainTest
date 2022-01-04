@@ -1,0 +1,20 @@
+---
+- name: Join to domain
+  hosts: all
+  remote_user: root
+  tasks:
+  - name: Update administrative tools
+    ansible.builtin.dnf: 
+      name: open-vm-tools,sssd,oddjob,oddjob-mkhomedir,adcli,samba-common,samba-common-tools,krb5-workstation,openldap-clients,policycoreutils-python-utils,rsyslog
+      state: latest
+  - name: Check if machine is bound
+    shell: /bin/bash -c "realm list | grep EMAXIMOLAB.COM"
+    register: realmd_bound
+    changed_when: false
+    ignore_errors: true
+  - name: Join system to AD and put the computer object in the Linux OU
+    expect:
+      command: /bin/bash -c "/usr/sbin/realm join --user={{ bind_username }}@EMAXIMOLAB.COM EMAXIMOLAB.COM"
+      responses:
+        Password for *: "{{ bind_password }}"
+    when: realmd_bound is failed

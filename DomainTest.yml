@@ -24,6 +24,7 @@
         command: /bin/bash -c "/usr/sbin/realm join --user=adbrowsersvc emaximolab.com --computer-ou=OU=Ansible,OU=Servers,OU=EmaximoLab,DC=emaximolab,DC=com"
         responses:
           Password for *: "{{ bind_password }}"
+      ignore_errors: yes
 
     - name: Add default_domain_suffix to sssd.conf
       lineinfile:
